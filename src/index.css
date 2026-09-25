@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Buffer Open Theme Colors */
+    --background: 0 0% 100%; /* #ffffff */
+    --foreground: 215 29% 12%; /* #1f2d3d */
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 29% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 29% 12%;
+
+    --primary: 207 81% 51%; /* #168eea */
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 210 85% 45%; /* #0f7bd4 */
+
+    --secondary: 210 28% 98%; /* #f5f8fa */
+    --secondary-foreground: 215 29% 12%;
+
+    --muted: 210 28% 98%;
+    --muted-foreground: 200 7% 54%; /* #7b8a8b */
+
+    --accent: 41 92% 85%; /* #fae3b0 */
+    --accent-foreground: 215 29% 12%;
+
+    --success: 164 100% 35%; /* #00b289 */
+    --success-foreground: 0 0% 100%;
+    --warning: 36 94% 56%; /* #f5a623 */
+    --warning-foreground: 0 0% 100%;
+    --error: 348 98% 43%; /* #d0021b */
+    --error-foreground: 0 0% 100%;
+
+    --destructive: 348 98% 43%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 213 28% 92%; /* #e0e6ed */
+    --input: 213 28% 92%;
+    --ring: 207 81% 51%;
+
+    --radius: 0.375rem; /* 6px */
+
+    --sidebar-background: 210 28% 98%;
+    --sidebar-foreground: 215 29% 12%;
+    --sidebar-primary: 207 81% 51%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 41 92% 85%;
+    --sidebar-accent-foreground: 215 29% 12%;
+    --sidebar-border: 213 28% 92%;
+    --sidebar-ring: 207 81% 51%;
+
+    font-family: 'Helvetica Neue', 'Segoe UI', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom Scrollbar Styles */
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 3px;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.5);
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Smooth scrolling behavior */
+  .smooth-scroll {
+    scroll-behavior: smooth;
+  }
+
+  /* Prevent layout shifts */
+  .layout-stable {
+    contain: layout style;
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      transition: none;
+    }
+    
+    .smooth-scroll {
+      scroll-behavior: auto;
+    }
+  }
+}

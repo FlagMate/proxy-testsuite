@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restify SDK Integration Example</title>
+    
+    <!-- Load Restify CSS from your Vercel deployment -->
+    <link rel="stylesheet" href="https://curlify.vercel.app/restifystyle.css">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            height: 80vh;
+        }
+        #restify-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Restify SDK Integration</h1>
+            <p>API Testing Tool hosted on Vercel, integrated in your domain</p>
+        </div>
+        <div class="content">
+            <!-- Container where Restify will be loaded -->
+            <div id="restify-container"></div>
+        </div>
+    </div>
+
+    <!-- Load Restify SDK from your Vercel deployment -->
+    <script type="module" src="https://curlify.vercel.app/restifysdk.js"></script>
+    
+    <script>
+        // Optional: Add custom configuration or event listeners
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('Restify SDK loaded from external domain');
+            
+            // You can add custom initialization logic here
+            // For example, pre-populate certain requests or configure environments
+        });
+    </script>
+</body>
+</html>
