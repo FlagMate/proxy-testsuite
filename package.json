@@ -1,8 +1,8 @@
 {
-  "name": "proxytea-commander",
+  "name": "proxyceptor-commander",
   "private": false,
   "version": "2.0.3",
-  "description": "ProxyTea REST Commander v2.0.1 — Lightweight, local-first API testing & debugging suite seamlessly integrated with ProxyTea Cloud & SuperDebug SDK.",
+  "description": "ProxyCeptor REST Commander v2.0.1 â€” Lightweight, local-first API testing & debugging suite seamlessly integrated with ProxyCeptor Cloud & SuperDebug SDK.",
   "type": "module",
   "keywords": [
     "api",
@@ -116,3 +116,4 @@
     "vitest": "^2.1.9"
   }
 }
+

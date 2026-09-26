@@ -1,4 +1,4 @@
-[core]
+﻿[core]
 	repositoryformatversion = 0
 	filemode = false
 	bare = false
@@ -12,7 +12,8 @@
 	remote = origin
 	merge = refs/heads/main
 	vscode-merge-base = origin/main
-[branch "proxytea-master"]
+[branch "proxyceptor-master"]
 	remote = origin
 	vscode-merge-base = origin/har-manager
-	merge = refs/heads/proxytea-master
+	merge = refs/heads/proxyceptor-master
+

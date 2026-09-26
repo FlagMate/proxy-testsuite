@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+﻿import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
@@ -9,9 +9,10 @@ export default defineConfig(({ mode }) => ({
   server: {
 
     host: true,
-    port: 5174,
+    port: 5175,
+    strictPort: true,
     cors: true,
-    allowedHosts: ['rest.proxytea.com', 'localhost', '127.0.0.1', '.hatchable.site'],
+    allowedHosts: ['rest.proxyceptor.com', 'localhost', '127.0.0.1', '.hatchable.site'],
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
@@ -72,3 +73,4 @@ export default defineConfig(({ mode }) => ({
     }
   },
 }));
+
