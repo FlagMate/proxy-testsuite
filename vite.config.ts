@@ -1,4 +1,4 @@
-﻿import { defineConfig } from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
@@ -52,22 +52,25 @@ export default defineConfig(({ mode }) => ({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      include: ['src/lib/**'],
       exclude: [
         'node_modules/',
         'src/test/',
+        'src/lib/__tests__/',
         'dist/',
         '**/*.d.ts',
         '**/*.config.ts',
         '**/*.config.js',
         'src/main.tsx',
-        'src/vite-env.d.ts'
+        'src/vite-env.d.ts',
+        'coverage/'
       ],
       thresholds: {
         global: {
-          branches: 50,
-          functions: 50,
-          lines: 50,
-          statements: 50
+          branches: 70,
+          functions: 70,
+          lines: 70,
+          statements: 70
         }
       }
     }
