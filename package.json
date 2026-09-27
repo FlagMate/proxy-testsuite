@@ -20,7 +20,7 @@
     "build:dev": "npm run test && vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "node ../scripts/deploy-test.mjs",
+    "deploy": "node scripts/deploy.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
