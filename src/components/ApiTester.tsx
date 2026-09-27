@@ -74,9 +74,9 @@ function getProxyEndpoint() {
   try {
     const stored = localStorage.getItem('sdm_server_url');
     if (stored) return `${stored.replace(/\/+$/, '')}/proxy`;
-  } catch (e) {}
-  if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_PROXY_URL) {
-    return import.meta.env.VITE_PROXY_URL;
+  } catch (e) { }
+  if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_SERVER_PROXY_URL) {
+    return import.meta.env.VITE_SERVER_PROXY_URL;
   }
   if (typeof window !== 'undefined' && window.location && window.location.origin) {
     return `${window.location.origin}/proxy`;
@@ -86,7 +86,7 @@ function getProxyEndpoint() {
 
 const ApiTester = () => {
   const { toast } = useToast();
-  
+
   // UI State
   const [showNewCollectionDialog, setShowNewCollectionDialog] = useState(false);
   const [showImportDialog, setShowImportDialog] = useState(false);
@@ -109,7 +109,7 @@ const ApiTester = () => {
       return '';
     }
   });
-  
+
   // Resizable Left Sidebar State
   const [sidebarWidth, setSidebarWidth] = useState<number>(() => {
     const saved = localStorage.getItem('apicommander:sidebarWidth');
@@ -126,28 +126,28 @@ const ApiTester = () => {
   const [isResizing, setIsResizing] = useState(false);
   const [isResponseCollapsed, setIsResponseCollapsed] = useState(false);
   const [previousHeight, setPreviousHeight] = useState(320);
-  
+
   // Load requests and activeRequestId from localStorage if present
   const [collections, setCollections] = useState<Collection[]>(() => {
     const saved = localStorage.getItem(COLLECTIONS_KEY);
     if (saved) {
       try {
         return JSON.parse(saved);
-      } catch {}
+      } catch { }
     }
     return [
       { id: 'default', name: 'Default' }
     ];
   });
   const [selectedCollectionId, setSelectedCollectionId] = useState('default');
-  
+
   // Environment Variables
   const [environments, setEnvironments] = useState<Environment[]>(() => {
     const saved = localStorage.getItem(ENVIRONMENTS_KEY);
     if (saved) {
       try {
         return JSON.parse(saved);
-      } catch {}
+      } catch { }
     }
     return [
       { id: 'default', name: 'Default', variables: [] }
@@ -160,7 +160,7 @@ const ApiTester = () => {
     if (saved) {
       try {
         return JSON.parse(saved);
-      } catch {}
+      } catch { }
     }
     return [
       {
@@ -188,7 +188,7 @@ const ApiTester = () => {
     if (saved) {
       try {
         return JSON.parse(saved);
-      } catch {}
+      } catch { }
     }
     return [];
   });
@@ -196,17 +196,17 @@ const ApiTester = () => {
   const activeRequest = requests.find(r => r.id === activeRequestId) || requests[0];
   const activeResponse = responses[activeRequestId];
   const visibleRequests = requests.filter(r => r.collectionId === selectedCollectionId);
-  const filteredRequests = searchTerm ? 
-    visibleRequests.filter(r => 
+  const filteredRequests = searchTerm ?
+    visibleRequests.filter(r =>
       r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       r.url.toLowerCase().includes(searchTerm.toLowerCase())
     ) : visibleRequests;
-  
+
   // Environment variable substitution
   const replaceVariables = (text: string): string => {
     const environment = environments.find(e => e.id === selectedEnvironmentId);
     if (!environment) return text;
-    
+
     let result = text;
     environment.variables.forEach(variable => {
       const regex = new RegExp(`{{${variable.key}}}`, 'g');
@@ -214,7 +214,7 @@ const ApiTester = () => {
     });
     return result;
   };
-  
+
   // Export collections
   const exportCollections = () => {
     const exportData = {
@@ -224,7 +224,7 @@ const ApiTester = () => {
       exportedAt: new Date().toISOString(),
       version: '1.0'
     };
-    
+
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -234,17 +234,17 @@ const ApiTester = () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     toast({ title: "Exported", description: "Collections exported successfully" });
   };
-  
+
   // Input validation
   const validateUrl = (url: string): boolean => {
     if (!url.trim()) return false;
-    
+
     // Replace environment variables for validation
     const processedUrl = replaceVariables(url);
-    
+
     try {
       new URL(processedUrl);
       return true;
@@ -256,20 +256,20 @@ const ApiTester = () => {
 
   const validateRequest = (request: ApiRequest): string[] => {
     const errors: string[] = [];
-    
+
     if (!request.url.trim()) {
       errors.push('URL is required');
     } else if (!validateUrl(request.url)) {
       errors.push('Invalid URL format');
     }
-    
+
     // Validate headers
     request.headers.forEach((header, index) => {
       if (header.enabled && header.key && !header.value) {
         errors.push(`Header ${index + 1}: Value is required when key is provided`);
       }
     });
-    
+
     return errors;
   };
 
@@ -277,11 +277,11 @@ const ApiTester = () => {
   const importCollections = () => {
     try {
       const data = JSON.parse(importData);
-      
+
       if (data.collections) setCollections(prev => [...prev, ...data.collections.filter((c: Collection) => c.id !== 'default')]);
       if (data.requests) setRequests(prev => [...prev, ...data.requests]);
       if (data.environments) setEnvironments(prev => [...prev, ...data.environments.filter((e: Environment) => e.id !== 'default')]);
-      
+
       setShowImportDialog(false);
       setImportData('');
       toast({ title: "Imported", description: "Collections imported successfully" });
@@ -363,20 +363,20 @@ const ApiTester = () => {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isResizing || isResponseCollapsed) return;
-      
+
       const container = document.querySelector('[data-right-panel]') as HTMLElement;
       if (!container) return;
-      
+
       const containerRect = container.getBoundingClientRect();
       const newHeight = Math.round(containerRect.bottom - e.clientY);
-      
+
       // Set min height (200px) and max height (80% of container)
       const minHeight = 200;
       const maxHeight = Math.floor(containerRect.height * 0.8);
       const clampedHeight = Math.round(Math.max(minHeight, Math.min(maxHeight, newHeight)));
-      
+
       setResponsePanelHeight(clampedHeight);
-      
+
       // If user starts resizing while collapsed, expand automatically
       if (isResponseCollapsed && clampedHeight > 100) {
         setIsResponseCollapsed(false);
@@ -467,22 +467,22 @@ const ApiTester = () => {
           const u = new URL(parsed.url);
           const seg = u.pathname.split('/').filter(Boolean).pop();
           if (seg) reqName = seg;
-        } catch {}
+        } catch { }
       }
 
       setRequests((prev) =>
         prev.map((req) =>
           req.id === activeRequestId
             ? {
-                ...req,
-                method: parsed.method || 'GET',
-                url: parsed.url || '',
-                headers,
-                body: parsed.body || '',
-                bodyType: parsed.bodyType || 'none',
-                rawType: (parsed.rawType as any) || 'json',
-                name: reqName,
-              }
+              ...req,
+              method: parsed.method || 'GET',
+              url: parsed.url || '',
+              headers,
+              body: parsed.body || '',
+              bodyType: parsed.bodyType || 'none',
+              rawType: (parsed.rawType as any) || 'json',
+              name: reqName,
+            }
             : req
         )
       );
@@ -503,7 +503,7 @@ const ApiTester = () => {
   const sendRequest = async (requestId: string) => {
     const request = requests.find(r => r.id === requestId);
     if (!request) return;
-    
+
     // Validate request before sending
     const validationErrors = validateRequest(request);
     if (validationErrors.length > 0) {
@@ -522,7 +522,7 @@ const ApiTester = () => {
       // Replace environment variables in URL and headers
       const processedUrl = replaceVariables(request.url);
       const processedHeaders: Record<string, string> = {};
-      
+
       request.headers.forEach(header => {
         if (header.enabled && header.key && header.value) {
           processedHeaders[replaceVariables(header.key)] = replaceVariables(header.value);
@@ -617,8 +617,8 @@ const ApiTester = () => {
 
       const ruleNote = appliedRules.length > 0 ? ` â€¢ ${appliedRules.length} rule(s) applied` : '';
       toast({
-        title: serverOverride 
-          ? `Request Sent (via Server MITM Override${ruleNote})` 
+        title: serverOverride
+          ? `Request Sent (via Server MITM Override${ruleNote})`
           : (useServerProxy ? "Request Sent (via Server Proxy)" : "Request Sent"),
         description: `Response: ${resStatus} ${resStatusText}`
       });
@@ -677,7 +677,7 @@ const ApiTester = () => {
     setRequests(prev => [...prev, newRequest]);
     setActiveRequestId(newId);
   };
-  
+
   const duplicateRequest = (requestId: string) => {
     const request = requests.find(r => r.id === requestId);
     if (request) {
@@ -694,8 +694,8 @@ const ApiTester = () => {
 
   // Phase 2: HAR Import Handler
   const handleHARImport = (
-    harRequests: ProcessedHARRequest[], 
-    collectionName: string, 
+    harRequests: ProcessedHARRequest[],
+    collectionName: string,
     targetCollectionId?: string
   ) => {
     let collectionIdToUse = targetCollectionId;
@@ -748,7 +748,7 @@ const ApiTester = () => {
   const closeRequest = (requestId: string) => {
     const currentIndex = requests.findIndex(r => r.id === requestId);
     const nextRequests = requests.filter(r => r.id !== requestId);
-    
+
     if (nextRequests.length === 0) {
       const newId = Date.now().toString();
       const freshRequest: ApiRequest = {
@@ -820,17 +820,17 @@ const ApiTester = () => {
 
   const renameRequest = (requestId: string, newName: string) => {
     if (!newName.trim()) return;
-    
-    setRequests(prev => prev.map(req => 
-      req.id === requestId 
+
+    setRequests(prev => prev.map(req =>
+      req.id === requestId
         ? { ...req, name: newName.trim() }
         : req
     ));
   };
 
   const updateRequest = (field: keyof ApiRequest, value: any) => {
-    setRequests(prev => prev.map(req => 
-      req.id === activeRequestId 
+    setRequests(prev => prev.map(req =>
+      req.id === activeRequestId
         ? { ...req, [field]: value }
         : req
     ));
@@ -842,7 +842,7 @@ const ApiTester = () => {
   };
 
   const updateHeader = (index: number, field: keyof Header, value: string | boolean) => {
-    const newHeaders = activeRequest.headers.map((header, i) => 
+    const newHeaders = activeRequest.headers.map((header, i) =>
       i === index ? { ...header, [field]: value } : header
     );
     updateRequest('headers', newHeaders);
@@ -872,7 +872,7 @@ const ApiTester = () => {
       const total = requestTests.length;
       const passed = requestTests.filter((tc: any) => tc.status === 'Pass').length;
       const failed = requestTests.filter((tc: any) => tc.status === 'Fail' || tc.status === 'Error').length;
-      
+
       return { total, passed, failed };
     } catch {
       return { total: 0, passed: 0, failed: 0 };
@@ -916,7 +916,7 @@ const ApiTester = () => {
             setCollections(prev => prev.map(c => c.id === id ? { ...c, name: newName } : c));
           }}
           onDeleteCollection={(id) => {
-            setRequests(prev => prev.map(req => 
+            setRequests(prev => prev.map(req =>
               req.collectionId === id ? { ...req, collectionId: 'default' } : req
             ));
             setCollections(prev => prev.filter(c => c.id !== id));
@@ -929,11 +929,10 @@ const ApiTester = () => {
         <div
           onMouseDown={handleSidebarMouseDown}
           onDoubleClick={handleSidebarDoubleClick}
-          className={`w-1.5 hover:w-2 active:w-2 transition-all cursor-col-resize select-none relative z-30 group flex items-center justify-center shrink-0 ${
-            isResizingSidebar 
-              ? 'bg-blue-600 shadow-sm' 
+          className={`w-1.5 hover:w-2 active:w-2 transition-all cursor-col-resize select-none relative z-30 group flex items-center justify-center shrink-0 ${isResizingSidebar
+              ? 'bg-blue-600 shadow-sm'
               : 'bg-slate-200/80 hover:bg-blue-400 dark:bg-slate-800 dark:hover:bg-blue-600'
-          }`}
+            }`}
           title="Drag to resize partition â€¢ Double-click to reset"
         >
           <div className="absolute inset-y-0 -left-1 -right-1 cursor-col-resize" />
@@ -966,314 +965,312 @@ const ApiTester = () => {
           {/* Resizable Container */}
           <div className="flex-1 flex flex-col overflow-hidden" style={{ minHeight: 0 }}>
             {/* Request Content Area */}
-            <div 
+            <div
               className="bg-gradient-to-b from-white via-slate-50/30 to-blue-50/20 overflow-auto scrollbar-thin"
               style={{ height: `calc(100% - ${responsePanelHeight}px)`, minHeight: '200px' }}
             >
-            {/* cURL Import Section */}
-            <div className="p-4 border-b border-slate-200/60 bg-gradient-to-r from-blue-50/20 to-indigo-50/30">
-            <div className="space-y-3">
-              <Textarea
-                placeholder="Paste your cURL command here..."
-                className="min-h-[60px] bg-white/70 border-slate-200/60 focus:bg-white focus:border-slate-300"
-                id="curl-input"
-              />
-              <Button 
-                onClick={() => {
-                  const textarea = document.getElementById('curl-input') as HTMLTextAreaElement;
-                  if (textarea?.value) {
-                    parseCurl(textarea.value);
-                    textarea.value = '';
-                  }
-                }}
-                className="bg-slate-600 hover:bg-slate-700 text-white"
-                size="sm"
-              >
-                Import cURL
-              </Button>
-            </div>
-          </div>
-
-          {/* Request URL Bar */}
-          <div className="p-4 border-b border-slate-200/60 bg-gradient-to-r from-white to-slate-50/40">
-            <div className="flex gap-2">
-              <Select 
-                value={activeRequest.method} 
-                onValueChange={(value) => updateRequest('method', value)}
-              >
-                <SelectTrigger className="w-24 border-slate-200/70 bg-white/80">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="GET">GET</SelectItem>
-                  <SelectItem value="POST">POST</SelectItem>
-                  <SelectItem value="PUT">PUT</SelectItem>
-                  <SelectItem value="DELETE">DELETE</SelectItem>
-                  <SelectItem value="PATCH">PATCH</SelectItem>
-                  <SelectItem value="HEAD">HEAD</SelectItem>
-                  <SelectItem value="OPTIONS">OPTIONS</SelectItem>
-                </SelectContent>
-              </Select>
-              <Input
-                placeholder="Enter request URL"
-                value={activeRequest.url}
-                onChange={(e) => updateRequest('url', e.target.value)}
-                className="flex-1 bg-white/80 border-slate-200/70 focus:bg-white focus:border-slate-300"
-              />
-              <label 
-                className="flex items-center gap-1.5 text-xs text-slate-700 select-none cursor-pointer px-2.5 py-1.5 rounded-md hover:bg-slate-100 transition-colors border border-slate-200/80 bg-white/90 shadow-sm"
-                title="Route request through ProxyCeptor backend server to bypass browser CORS restrictions"
-              >
-                <input
-                  type="checkbox"
-                  checked={useServerProxy}
-                  onChange={(e) => setUseServerProxy(e.target.checked)}
-                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer w-3.5 h-3.5"
-                />
-                <span className="font-semibold whitespace-nowrap">Server Proxy</span>
-              </label>
-
-              <label 
-                className={`flex items-center gap-1.5 text-xs select-none cursor-pointer px-2.5 py-1.5 rounded-md transition-colors border shadow-sm ${
-                  serverOverride 
-                    ? 'bg-purple-50 text-purple-700 border-purple-300 dark:bg-purple-950/40 dark:text-purple-300' 
-                    : 'bg-white/90 text-slate-700 border-slate-200/80 hover:bg-slate-100'
-                }`}
-                title="Server Side Resource Override (Server MITM): Loads DB rules for your API Key and applies rule matching/transforms directly on server"
-              >
-                <input
-                  type="checkbox"
-                  checked={serverOverride}
-                  onChange={(e) => {
-                    const checked = e.target.checked;
-                    setServerOverride(checked);
-                    if (checked) setUseServerProxy(true);
-                  }}
-                  className="rounded border-slate-300 text-purple-600 focus:ring-purple-500 cursor-pointer w-3.5 h-3.5"
-                />
-                <span className="font-semibold whitespace-nowrap">Server Override</span>
-              </label>
-
-              {serverOverride && (
-                <Input
-                  placeholder="API Key (sdm_live_...)"
-                  value={serverApiKey}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setServerApiKey(val);
-                    try { localStorage.setItem('sdm_active_api_key', val); } catch {}
-                  }}
-                  className="w-44 h-8 text-xs font-mono bg-white/90 border-purple-200 focus:border-purple-400"
-                  title="ProxyCeptor API Key for DB Rule Lookup"
-                />
-              )}
-              <Button 
-                onClick={() => sendRequest(activeRequestId)}
-                disabled={loading[activeRequestId] || !activeRequest.url}
-                className="bg-slate-600 hover:bg-slate-700 text-white px-6"
-                title="Send Request (Ctrl+Enter)"
-              >
-                {loading[activeRequestId] ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4 mr-2" />
-                    Send
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-
-          {/* Tabs */}
-          <Tabs defaultValue="params" className="w-full">
-            <div className="px-4 border-b border-slate-200/60 bg-gradient-to-r from-slate-50/30 to-blue-50/20">
-              <TabsList className="bg-transparent p-0 h-auto">
-                <TabsTrigger 
-                  value="params" 
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-100 data-[state=active]:to-blue-50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-slate-600 rounded-none px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50"
-                >
-                  Params
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="authorization"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-100 data-[state=active]:to-blue-50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-slate-600 rounded-none px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50"
-                >
-                  Authorization
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="headers"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-100 data-[state=active]:to-blue-50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-slate-600 rounded-none px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50"
-                >
-                  Headers ({activeRequest.headers.filter(h => h.key && h.value).length})
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="body"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-100 data-[state=active]:to-blue-50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-slate-600 rounded-none px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50"
-                >
-                  Body
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="scripts"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-100 data-[state=active]:to-blue-50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-slate-600 rounded-none px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50"
-                >
-                  Scripts
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="settings"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-100 data-[state=active]:to-blue-50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-slate-600 rounded-none px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50"
-                >
-                  Settings
-                </TabsTrigger>
-              </TabsList>
-            </div>
-
-            <TabsContent value="params" className="p-4 m-0 bg-gradient-to-br from-white to-slate-50/30">
-              <div className="text-slate-500 text-sm">
-                Query parameters
-              </div>
-            </TabsContent>
-
-            <TabsContent value="authorization" className="p-4 m-0 bg-gradient-to-br from-white to-slate-50/30">
-              <div className="text-slate-500 text-sm">
-                Authorization settings
-              </div>
-            </TabsContent>
-
-            <TabsContent value="headers" className="p-4 m-0 space-y-3 bg-gradient-to-br from-white to-slate-50/30">
-              <div className="grid grid-cols-12 gap-2 text-xs font-medium text-gray-500 uppercase">
-                <div className="col-span-5">Key</div>
-                <div className="col-span-6">Value</div>
-                <div className="col-span-1"></div>
-              </div>
-              {activeRequest.headers.map((header, index) => (
-                <div key={index} className="grid grid-cols-12 gap-2 items-center">
-                  <Input
-                    placeholder="Key"
-                    value={header.key}
-                    onChange={(e) => updateHeader(index, 'key', e.target.value)}
-                    className="col-span-5 bg-white/80 border-slate-200/70 focus:bg-white focus:border-slate-300"
-                  />
-                  <Input
-                    placeholder="Value"
-                    value={header.value}
-                    onChange={(e) => updateHeader(index, 'value', e.target.value)}
-                    className="col-span-6 bg-white/80 border-slate-200/70 focus:bg-white focus:border-slate-300"
+              {/* cURL Import Section */}
+              <div className="p-4 border-b border-slate-200/60 bg-gradient-to-r from-blue-50/20 to-indigo-50/30">
+                <div className="space-y-3">
+                  <Textarea
+                    placeholder="Paste your cURL command here..."
+                    className="min-h-[60px] bg-white/70 border-slate-200/60 focus:bg-white focus:border-slate-300"
+                    id="curl-input"
                   />
                   <Button
-                    variant="ghost"
+                    onClick={() => {
+                      const textarea = document.getElementById('curl-input') as HTMLTextAreaElement;
+                      if (textarea?.value) {
+                        parseCurl(textarea.value);
+                        textarea.value = '';
+                      }
+                    }}
+                    className="bg-slate-600 hover:bg-slate-700 text-white"
                     size="sm"
-                    onClick={() => removeHeader(index)}
-                    disabled={activeRequest.headers.length === 1}
-                    className="col-span-1 p-1 h-8 w-8"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    Import cURL
                   </Button>
                 </div>
-              ))}
-              <Button
-                variant="ghost"
-                onClick={addHeader}
-                className="text-orange-500 hover:text-orange-600 hover:bg-orange-50"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Header
-              </Button>
-            </TabsContent>
-
-            <TabsContent value="body" className="p-0 m-0 bg-gradient-to-br from-white to-slate-50/30">
-              <div className="p-4 border-b border-slate-200/60 bg-gradient-to-r from-slate-50/30 to-blue-50/20">
-                <RadioGroup 
-                  value={activeRequest.bodyType} 
-                  onValueChange={(value: any) => updateRequest('bodyType', value)}
-                  className="flex gap-6"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="none" id="none" />
-                    <Label htmlFor="none" className="text-sm">none</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="form-data" id="form-data" />
-                    <Label htmlFor="form-data" className="text-sm">form-data</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="x-www-form-urlencoded" id="x-www-form-urlencoded" />
-                    <Label htmlFor="x-www-form-urlencoded" className="text-sm">x-www-form-urlencoded</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="raw" id="raw" />
-                    <Label htmlFor="raw" className="text-sm">raw</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="binary" id="binary" />
-                    <Label htmlFor="binary" className="text-sm">binary</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="GraphQL" id="GraphQL" />
-                    <Label htmlFor="GraphQL" className="text-sm">GraphQL</Label>
-                  </div>
-                </RadioGroup>
-                
-                {activeRequest.bodyType === 'raw' && (
-                  <div className="mt-4 flex justify-end">
-                    <Select 
-                      value={activeRequest.rawType} 
-                      onValueChange={(value: any) => updateRequest('rawType', value)}
-                    >
-                      <SelectTrigger className="w-32 border-gray-300">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="text">Text</SelectItem>
-                        <SelectItem value="json">JSON</SelectItem>
-                        <SelectItem value="javascript">JavaScript</SelectItem>
-                        <SelectItem value="html">HTML</SelectItem>
-                        <SelectItem value="xml">XML</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
               </div>
-              
-              {activeRequest.bodyType !== 'none' && (
-                <div className="relative bg-gradient-to-br from-white to-slate-50/20">
-                  <div className="absolute top-3 left-3 text-xs text-slate-400 font-mono">
-                    {Array.from({ length: 20 }, (_, i) => (
-                      <div key={i + 1} className="leading-5">{i + 1}</div>
-                    ))}
-                  </div>
-                  <Textarea
-                    placeholder={activeRequest.bodyType === 'raw' && activeRequest.rawType === 'json' ? '{\n    "key": "value"\n}' : 'Enter request body...'}
-                    value={activeRequest.body}
-                    onChange={(e) => updateRequest('body', e.target.value)}
-                    className="min-h-[300px] pl-12 font-mono text-sm border-0 border-t border-slate-200/60 rounded-none resize-none focus:ring-0 bg-white/70 focus:bg-white"
+
+              {/* Request URL Bar */}
+              <div className="p-4 border-b border-slate-200/60 bg-gradient-to-r from-white to-slate-50/40">
+                <div className="flex gap-2">
+                  <Select
+                    value={activeRequest.method}
+                    onValueChange={(value) => updateRequest('method', value)}
+                  >
+                    <SelectTrigger className="w-24 border-slate-200/70 bg-white/80">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="GET">GET</SelectItem>
+                      <SelectItem value="POST">POST</SelectItem>
+                      <SelectItem value="PUT">PUT</SelectItem>
+                      <SelectItem value="DELETE">DELETE</SelectItem>
+                      <SelectItem value="PATCH">PATCH</SelectItem>
+                      <SelectItem value="HEAD">HEAD</SelectItem>
+                      <SelectItem value="OPTIONS">OPTIONS</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input
+                    placeholder="Enter request URL"
+                    value={activeRequest.url}
+                    onChange={(e) => updateRequest('url', e.target.value)}
+                    className="flex-1 bg-white/80 border-slate-200/70 focus:bg-white focus:border-slate-300"
                   />
+                  <label
+                    className="flex items-center gap-1.5 text-xs text-slate-700 select-none cursor-pointer px-2.5 py-1.5 rounded-md hover:bg-slate-100 transition-colors border border-slate-200/80 bg-white/90 shadow-sm"
+                    title="Route request through ProxyCeptor backend server to bypass browser CORS restrictions"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={useServerProxy}
+                      onChange={(e) => setUseServerProxy(e.target.checked)}
+                      className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer w-3.5 h-3.5"
+                    />
+                    <span className="font-semibold whitespace-nowrap">Server Proxy</span>
+                  </label>
+
+                  <label
+                    className={`flex items-center gap-1.5 text-xs select-none cursor-pointer px-2.5 py-1.5 rounded-md transition-colors border shadow-sm ${serverOverride
+                        ? 'bg-purple-50 text-purple-700 border-purple-300 dark:bg-purple-950/40 dark:text-purple-300'
+                        : 'bg-white/90 text-slate-700 border-slate-200/80 hover:bg-slate-100'
+                      }`}
+                    title="Server Side Resource Override (Server MITM): Loads DB rules for your API Key and applies rule matching/transforms directly on server"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={serverOverride}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        setServerOverride(checked);
+                        if (checked) setUseServerProxy(true);
+                      }}
+                      className="rounded border-slate-300 text-purple-600 focus:ring-purple-500 cursor-pointer w-3.5 h-3.5"
+                    />
+                    <span className="font-semibold whitespace-nowrap">Server Override</span>
+                  </label>
+
+                  {serverOverride && (
+                    <Input
+                      placeholder="API Key (sdm_live_...)"
+                      value={serverApiKey}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setServerApiKey(val);
+                        try { localStorage.setItem('sdm_active_api_key', val); } catch { }
+                      }}
+                      className="w-44 h-8 text-xs font-mono bg-white/90 border-purple-200 focus:border-purple-400"
+                      title="ProxyCeptor API Key for DB Rule Lookup"
+                    />
+                  )}
+                  <Button
+                    onClick={() => sendRequest(activeRequestId)}
+                    disabled={loading[activeRequestId] || !activeRequest.url}
+                    className="bg-slate-600 hover:bg-slate-700 text-white px-6"
+                    title="Send Request (Ctrl+Enter)"
+                  >
+                    {loading[activeRequestId] ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 mr-2" />
+                        Send
+                      </>
+                    )}
+                  </Button>
                 </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="scripts" className="p-4 m-0 bg-gradient-to-br from-white to-slate-50/30">
-              <div className="text-slate-500 text-sm">
-                Pre-request and test scripts
               </div>
-            </TabsContent>
 
-            <TabsContent value="settings" className="p-4 m-0 bg-gradient-to-br from-white to-slate-50/30">
-              <div className="text-slate-500 text-sm">
-                Request settings
-              </div>
-            </TabsContent>
-          </Tabs>
+              {/* Tabs */}
+              <Tabs defaultValue="params" className="w-full">
+                <div className="px-4 border-b border-slate-200/60 bg-gradient-to-r from-slate-50/30 to-blue-50/20">
+                  <TabsList className="bg-transparent p-0 h-auto">
+                    <TabsTrigger
+                      value="params"
+                      className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-100 data-[state=active]:to-blue-50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-slate-600 rounded-none px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50"
+                    >
+                      Params
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="authorization"
+                      className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-100 data-[state=active]:to-blue-50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-slate-600 rounded-none px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50"
+                    >
+                      Authorization
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="headers"
+                      className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-100 data-[state=active]:to-blue-50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-slate-600 rounded-none px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50"
+                    >
+                      Headers ({activeRequest.headers.filter(h => h.key && h.value).length})
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="body"
+                      className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-100 data-[state=active]:to-blue-50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-slate-600 rounded-none px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50"
+                    >
+                      Body
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="scripts"
+                      className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-100 data-[state=active]:to-blue-50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-slate-600 rounded-none px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50"
+                    >
+                      Scripts
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="settings"
+                      className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-100 data-[state=active]:to-blue-50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-slate-600 rounded-none px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50"
+                    >
+                      Settings
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+
+                <TabsContent value="params" className="p-4 m-0 bg-gradient-to-br from-white to-slate-50/30">
+                  <div className="text-slate-500 text-sm">
+                    Query parameters
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="authorization" className="p-4 m-0 bg-gradient-to-br from-white to-slate-50/30">
+                  <div className="text-slate-500 text-sm">
+                    Authorization settings
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="headers" className="p-4 m-0 space-y-3 bg-gradient-to-br from-white to-slate-50/30">
+                  <div className="grid grid-cols-12 gap-2 text-xs font-medium text-gray-500 uppercase">
+                    <div className="col-span-5">Key</div>
+                    <div className="col-span-6">Value</div>
+                    <div className="col-span-1"></div>
+                  </div>
+                  {activeRequest.headers.map((header, index) => (
+                    <div key={index} className="grid grid-cols-12 gap-2 items-center">
+                      <Input
+                        placeholder="Key"
+                        value={header.key}
+                        onChange={(e) => updateHeader(index, 'key', e.target.value)}
+                        className="col-span-5 bg-white/80 border-slate-200/70 focus:bg-white focus:border-slate-300"
+                      />
+                      <Input
+                        placeholder="Value"
+                        value={header.value}
+                        onChange={(e) => updateHeader(index, 'value', e.target.value)}
+                        className="col-span-6 bg-white/80 border-slate-200/70 focus:bg-white focus:border-slate-300"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeHeader(index)}
+                        disabled={activeRequest.headers.length === 1}
+                        className="col-span-1 p-1 h-8 w-8"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    variant="ghost"
+                    onClick={addHeader}
+                    className="text-orange-500 hover:text-orange-600 hover:bg-orange-50"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Header
+                  </Button>
+                </TabsContent>
+
+                <TabsContent value="body" className="p-0 m-0 bg-gradient-to-br from-white to-slate-50/30">
+                  <div className="p-4 border-b border-slate-200/60 bg-gradient-to-r from-slate-50/30 to-blue-50/20">
+                    <RadioGroup
+                      value={activeRequest.bodyType}
+                      onValueChange={(value: any) => updateRequest('bodyType', value)}
+                      className="flex gap-6"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="none" id="none" />
+                        <Label htmlFor="none" className="text-sm">none</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="form-data" id="form-data" />
+                        <Label htmlFor="form-data" className="text-sm">form-data</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="x-www-form-urlencoded" id="x-www-form-urlencoded" />
+                        <Label htmlFor="x-www-form-urlencoded" className="text-sm">x-www-form-urlencoded</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="raw" id="raw" />
+                        <Label htmlFor="raw" className="text-sm">raw</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="binary" id="binary" />
+                        <Label htmlFor="binary" className="text-sm">binary</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="GraphQL" id="GraphQL" />
+                        <Label htmlFor="GraphQL" className="text-sm">GraphQL</Label>
+                      </div>
+                    </RadioGroup>
+
+                    {activeRequest.bodyType === 'raw' && (
+                      <div className="mt-4 flex justify-end">
+                        <Select
+                          value={activeRequest.rawType}
+                          onValueChange={(value: any) => updateRequest('rawType', value)}
+                        >
+                          <SelectTrigger className="w-32 border-gray-300">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="text">Text</SelectItem>
+                            <SelectItem value="json">JSON</SelectItem>
+                            <SelectItem value="javascript">JavaScript</SelectItem>
+                            <SelectItem value="html">HTML</SelectItem>
+                            <SelectItem value="xml">XML</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
+                  </div>
+
+                  {activeRequest.bodyType !== 'none' && (
+                    <div className="relative bg-gradient-to-br from-white to-slate-50/20">
+                      <div className="absolute top-3 left-3 text-xs text-slate-400 font-mono">
+                        {Array.from({ length: 20 }, (_, i) => (
+                          <div key={i + 1} className="leading-5">{i + 1}</div>
+                        ))}
+                      </div>
+                      <Textarea
+                        placeholder={activeRequest.bodyType === 'raw' && activeRequest.rawType === 'json' ? '{\n    "key": "value"\n}' : 'Enter request body...'}
+                        value={activeRequest.body}
+                        onChange={(e) => updateRequest('body', e.target.value)}
+                        className="min-h-[300px] pl-12 font-mono text-sm border-0 border-t border-slate-200/60 rounded-none resize-none focus:ring-0 bg-white/70 focus:bg-white"
+                      />
+                    </div>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="scripts" className="p-4 m-0 bg-gradient-to-br from-white to-slate-50/30">
+                  <div className="text-slate-500 text-sm">
+                    Pre-request and test scripts
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="settings" className="p-4 m-0 bg-gradient-to-br from-white to-slate-50/30">
+                  <div className="text-slate-500 text-sm">
+                    Request settings
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
 
             {/* Resizer Bar */}
-            <div 
-              className={`h-2 bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 hover:from-blue-400 hover:via-blue-500 hover:to-blue-400 cursor-row-resize flex items-center justify-center relative group transition-all duration-200 border-y border-slate-300 ${
-                isResizing ? 'from-blue-500 via-blue-600 to-blue-500 shadow-lg' : ''
-              }`}
+            <div
+              className={`h-2 bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 hover:from-blue-400 hover:via-blue-500 hover:to-blue-400 cursor-row-resize flex items-center justify-center relative group transition-all duration-200 border-y border-slate-300 ${isResizing ? 'from-blue-500 via-blue-600 to-blue-500 shadow-lg' : ''
+                }`}
               onMouseDown={handleMouseDown}
               onDoubleClick={handleDoubleClick}
               style={{ userSelect: 'none' }}
@@ -1284,7 +1281,7 @@ const ApiTester = () => {
                 <div className="w-6 h-0.5 bg-slate-500 group-hover:bg-white transition-colors rounded-full"></div>
                 <div className="w-6 h-0.5 bg-slate-500 group-hover:bg-white transition-colors rounded-full"></div>
               </div>
-              
+
               {/* Resize cursor indicator */}
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="text-xs text-white font-medium bg-black/70 px-2 py-1 rounded pointer-events-none">
@@ -1333,7 +1330,7 @@ const ApiTester = () => {
               <Button variant="outline" onClick={() => setShowNewCollectionDialog(false)}>
                 Cancel
               </Button>
-              <Button 
+              <Button
                 onClick={() => {
                   if (newCollectionName.trim()) {
                     const id = Date.now().toString();
@@ -1349,7 +1346,7 @@ const ApiTester = () => {
           </div>
         </DialogContent>
       </Dialog>
-      
+
       {/* Import Dialog */}
       <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
         <DialogContent>
@@ -1378,7 +1375,7 @@ const ApiTester = () => {
           </div>
         </DialogContent>
       </Dialog>
-      
+
       {/* Environment Management Dialog */}
       <Dialog open={showEnvironmentDialog} onOpenChange={setShowEnvironmentDialog}>
         <DialogContent className="max-w-2xl">
@@ -1391,8 +1388,8 @@ const ApiTester = () => {
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-medium">{env.name}</h3>
                   {env.id !== 'default' && (
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="destructive"
                       onClick={() => {
                         setEnvironments(prev => prev.filter(e => e.id !== env.id));
@@ -1412,7 +1409,7 @@ const ApiTester = () => {
                         onChange={(e) => {
                           const newVariables = [...env.variables];
                           newVariables[index] = { ...variable, key: e.target.value };
-                          setEnvironments(prev => prev.map(e => 
+                          setEnvironments(prev => prev.map(e =>
                             e.id === env.id ? { ...e, variables: newVariables } : e
                           ));
                         }}
@@ -1423,7 +1420,7 @@ const ApiTester = () => {
                         onChange={(e) => {
                           const newVariables = [...env.variables];
                           newVariables[index] = { ...variable, value: e.target.value };
-                          setEnvironments(prev => prev.map(e => 
+                          setEnvironments(prev => prev.map(e =>
                             e.id === env.id ? { ...e, variables: newVariables } : e
                           ));
                         }}
@@ -1433,7 +1430,7 @@ const ApiTester = () => {
                         variant="outline"
                         onClick={() => {
                           const newVariables = env.variables.filter((_, i) => i !== index);
-                          setEnvironments(prev => prev.map(e => 
+                          setEnvironments(prev => prev.map(e =>
                             e.id === env.id ? { ...e, variables: newVariables } : e
                           ));
                         }}
@@ -1447,7 +1444,7 @@ const ApiTester = () => {
                     variant="outline"
                     onClick={() => {
                       const newVariables = [...env.variables, { key: '', value: '' }];
-                      setEnvironments(prev => prev.map(e => 
+                      setEnvironments(prev => prev.map(e =>
                         e.id === env.id ? { ...e, variables: newVariables } : e
                       ));
                     }}
@@ -1467,7 +1464,7 @@ const ApiTester = () => {
           </div>
         </DialogContent>
       </Dialog>
-      
+
       {/* New Environment Dialog */}
       <Dialog open={showNewEnvironmentDialog} onOpenChange={setShowNewEnvironmentDialog}>
         <DialogContent>
@@ -1488,7 +1485,7 @@ const ApiTester = () => {
               <Button variant="outline" onClick={() => setShowNewEnvironmentDialog(false)}>
                 Cancel
               </Button>
-              <Button 
+              <Button
                 onClick={() => {
                   if (newEnvironmentName.trim()) {
                     const id = Date.now().toString();
@@ -1504,7 +1501,7 @@ const ApiTester = () => {
           </div>
         </DialogContent>
       </Dialog>
-      
+
       {/* Help Dialog */}
       <Dialog open={showHelpDialog} onOpenChange={setShowHelpDialog}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">

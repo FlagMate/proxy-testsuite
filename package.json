@@ -14,13 +14,6 @@
     "privacy",
     "local-first"
   ],
-  "homepage": "https://github.com/nvnjwl/proxy-testsuite",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/nvnjwl/proxy-testsuite.git"
-  },
-  "author": "nvnjwl",
-  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "npm run test && vite build",

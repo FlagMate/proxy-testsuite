@@ -13,7 +13,7 @@ const Header: React.FC<HeaderProps> = ({ onShowHelp }) => {
     <header className="relative bg-slate-950/95 backdrop-blur border-b border-slate-800 shadow-md select-none">
       {/* ProxyCeptor Gradient Hairline Accent */}
       <div className="h-[2px] w-full bg-gradient-to-r from-violet-500 via-indigo-500 to-cyan-400" />
-      
+
       <div className="flex items-center justify-between w-full px-4 py-2.5">
         {/* Logo and Brand */}
         <div className="flex items-center gap-3">
@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ onShowHelp }) => {
             </Badge>
           </div>
         </div>
-        
+
         {/* Compact Features, SDK Status & Actions */}
         <div className="flex items-center gap-3 text-xs text-slate-300">
           <span className="hidden xl:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400 font-mono text-[11px]">
@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ onShowHelp }) => {
           </span>
 
           <a
-            href={(import.meta.env.VITE_DASHBOARD_URL as string) || 'https://app.proxyceptor.com'}
+            href={(import.meta.env.VITE_DASHBOARD_BASE_URL as string) || 'https://app.proxyceptor.com'}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-md bg-violet-500/10 text-violet-300 border border-violet-500/30 hover:bg-violet-500/20 hover:text-white transition-colors"
@@ -56,9 +56,9 @@ const Header: React.FC<HeaderProps> = ({ onShowHelp }) => {
             <ExternalLink className="w-3 h-3" />
           </a>
 
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             className="text-slate-300 hover:text-white hover:bg-slate-800 px-2.5 py-1 h-7 text-xs border border-transparent hover:border-slate-700"
             onClick={onShowHelp}
           >
