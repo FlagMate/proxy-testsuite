@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -1612,7 +1612,7 @@ const ApiTester = () => {
                   <div className="w-6 h-6 bg-gradient-to-br from-violet-600 via-indigo-600 to-cyan-500 rounded flex items-center justify-center shadow-sm">
                     <Send className="w-3 h-3 text-white" />
                   </div>
-                  <span className="font-semibold text-slate-800">ProxyCeptor Commander v2.0.0</span>
+                  <span className="font-semibold text-slate-800">ProxyCeptor Commander v2.5.0</span>
                 </div>
                 <p className="text-xs text-slate-500">Integrated with ProxyCeptor Cloud &amp; SuperDebug</p>
               </div>

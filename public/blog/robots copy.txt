@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://restifyapp.vercel.app/blog/sitemap.xml
