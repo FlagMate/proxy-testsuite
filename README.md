@@ -1,87 +1,81 @@
-# 🚀 Restify - The Local-First API Testing Tool
+# ProxyCeptor Commander
 
-**A lightweight, fast, and privacy-focused alternative to Postman**
+**High-Performance, Local-First API Testing & Traffic Replay Suite**
 
-🎉 **Phase 1 Complete** - Production-ready MVP deployed at [curlify.vercel.app](https://curlify.vercel.app/)
-
-## Why Choose Restify Over Postman?
-
-### 🔒 **Privacy First**
-- **100% Local Storage** - Your API keys, requests, and data never leave your machine
-- **No Account Required** - Start testing APIs immediately
-- **Offline Ready** - Works without internet connection
-- **Zero Telemetry** - No tracking, no analytics, no data collection
-
-### ⚡ **Built for Speed**
-- **Instant Startup** - No slow Electron app loading (opens in 0.5s vs Postman's 8s+)
-- **Native Web Performance** - Runs in your browser, lightning fast
-- **Keyboard Shortcuts** - Power user friendly (Ctrl+Enter to send, Ctrl+N for new request)
-- **Lightweight** - Under 5MB vs Postman's 200MB+ install
-
-### 🎯 **Developer Focused**
-- **Clean Interface** - No bloated enterprise features you don't need
-- **Smart Environment Variables** - Simple {{variable}} syntax that just works
-- **cURL Import** - Paste any cURL command and start testing immediately
-- **Export/Import Collections** - Share with team as simple JSON files
-
-## Features
-
-✅ **Request Collections** - Organize your APIs logically  
-✅ **Environment Variables** - {{baseUrl}}, {{token}} - works everywhere  
-✅ **Export/Import** - Share collections with your team as JSON  
-✅ **Request History** - Never lose a request  
-✅ **Input Validation** - Catch errors before sending  
-✅ **Search & Filter** - Find requests instantly  
-✅ **cURL Import** - Paste and convert instantly  
-✅ **Keyboard Shortcuts** - Work at the speed of thought  
-
-## Quick Start
-
-1. **Clone & Run**
-   ```bash
-   git clone https://github.com/nvnjwl/curl-commander.git
-   cd curl-commander
-   npm install
-   npm run dev
-   ```
-
-2. **Start Testing APIs**
-   - Paste a cURL command or create a new request
-   - Set up environment variables like {{baseUrl}}
-   - Organize requests into collections
-   - Export/import collections as needed
-
-## Keyboard Shortcuts
-
-- `Ctrl+Enter` - Send request
-- `Ctrl+N` - New request  
-- `Ctrl+D` - Duplicate request
-- `Ctrl+W` - Close request
-
-## Philosophy
-
-**Restify believes API testing should be:**
-- **Fast** - No waiting for heavy apps to load
-- **Private** - Your data stays on your machine
-- **Simple** - Focus on testing, not learning complex tools
-- **Local** - Work offline, sync when you choose
-
-## vs Postman Comparison
-
-| Feature | Restify | Postman |
-|---------|---------|---------|
-| **Startup Time** | 0.5 seconds | 8+ seconds |
-| **Install Size** | < 5MB | 200MB+ |
-| **Privacy** | 100% local | Cloud-dependent |
-| **Account Required** | No | Yes (for sync) |
-| **Offline Work** | Yes | Limited |
-| **Learning Curve** | 5 minutes | Hours |
-| **Enterprise Bloat** | None | Heavy |
+ProxyCeptor Commander (`proxy-testsuite`) is a lightweight, privacy-focused API client and production traffic workbench built for the **ProxyCeptor Ecosystem**. It functions both as an autonomous developer workspace and as an embedded workbench inside the ProxyCeptor Cloud Dashboard (`/test`).
 
 ---
 
-*Built by developers, for developers who value speed, privacy, and simplicity.*
+## Key Features
+
+- **🔒 100% Local-First & Private**: All requests, collections, environment variables, and history persist in local browser storage. Zero telemetry, no external accounts required.
+- **⚡ Sub-Second Startup**: Native web architecture that opens instantly without the multi-gigabyte bloat of Electron-based clients.
+- **🎯 Smart cURL Ingestion**: Paste any raw cURL command to instantly generate an executable, parameterized request.
+- **📦 HAR Archive Import**: Convert browser or ProxyCeptor DevTools network recordings (`.har`) into ready-to-run API test collections with automated domain and route filtering.
+- **🔍 Modern JSON Response Viewer**:
+  - Gutter line numbers synchronized with tree nodes.
+  - Active visual indent rails.
+  - JSONPath (`$.path`) and value one-click copy on hover.
+  - Smart value decoders: human-readable dates for epoch timestamps, inline color chips, and built-in video stream previews (`.m3u8`, `.mpd`).
+  - Real-time search with match indicators.
+- **🌐 ProxyCeptor Cloud Forwarding**: Built-in bridge to the ProxyCeptor Cloud CORS Proxy (`/proxy`) enabling cross-origin execution and server-side MITM rule evaluation.
+- **⌨️ Keyboard Driven**: Built for speed with dedicated shortcut hotkeys (`Ctrl+Enter`, `Ctrl+N`, `Ctrl+D`, `Ctrl+W`).
+
+---
+
+## Quickstart
+
+### 1. Run Locally
+```bash
+# From proxy-testsuite/
+npm install
+npm run dev
+```
+The application will launch at `http://localhost:8080/`.
+
+### 2. Run Tests
+```bash
+npm run test
+```
+
+### 3. Build & Deploy to ProxyCeptor Dashboard
+```bash
+npm run build
+npm run deploy
+```
+This builds the production assets and synchronizes them into `proxy-dashboard/public/test/`.
+
+---
+
+## Keyboard Shortcuts
+
+| Shortcut | Description |
+|---|---|
+| `Ctrl + Enter` / `Cmd + Enter` | Send current request |
+| `Ctrl + N` / `Cmd + N` | Create a new request |
+| `Ctrl + D` / `Cmd + D` | Duplicate the active request |
+| `Ctrl + W` / `Cmd + W` | Close the current request tab |
+
+---
+
+## Project Structure
+
+```
+proxy-testsuite/
+├── src/
+│   ├── components/      # UI components (ApiTester, ModernJsonViewer, HARImportDialog)
+│   ├── lib/             # Core engines (harParser, testRunner, utils)
+│   ├── types/           # TypeScript definitions
+│   └── test/            # Vitest unit test suite
+├── public/              # Static assets and icons
+├── scripts/             # Git submodule commit & deployment automation
+├── Agent.md             # In-depth technical architecture & agent instructions
+├── README.md            # Product overview & quickstart guide
+└── vite.config.ts       # Bundling configuration
+```
+
+---
 
 ## License
 
-MIT License - Use it, modify it, distribute it freely.
+MIT

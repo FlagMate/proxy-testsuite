@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { HelpCircle, ExternalLink, Zap } from "lucide-react";
+import pkg from "../../package.json";
 
 interface HeaderProps {
   onShowHelp: () => void;
@@ -10,7 +11,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onShowHelp }) => {
   return (
     <header className="relative bg-slate-950/95 backdrop-blur border-b border-slate-800 shadow-md select-none">
-      {/* ProxyTea Gradient Hairline Accent */}
+      {/* ProxyCeptor Gradient Hairline Accent */}
       <div className="h-[2px] w-full bg-gradient-to-r from-violet-500 via-indigo-500 to-cyan-400" />
       
       <div className="flex items-center justify-between w-full px-4 py-2.5">
@@ -21,11 +22,11 @@ const Header: React.FC<HeaderProps> = ({ onShowHelp }) => {
           </div>
           <div className="flex items-center gap-2.5">
             <div className="flex items-baseline gap-1.5">
-              <h1 className="text-base font-bold tracking-tight text-white">ProxyTea</h1>
+              <h1 className="text-base font-bold tracking-tight text-white">ProxyCeptor</h1>
               <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Commander</span>
             </div>
             <Badge className="bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[11px] font-semibold px-2 py-0.5 rounded-full shadow-sm">
-              v2.0.1
+              v{pkg.version}
             </Badge>
           </div>
         </div>
@@ -46,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ onShowHelp }) => {
           </span>
 
           <a
-            href={(import.meta.env.VITE_DASHBOARD_URL as string) || '/app'}
+            href={(import.meta.env.VITE_DASHBOARD_URL as string) || 'https://app.proxyceptor.com'}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-md bg-violet-500/10 text-violet-300 border border-violet-500/30 hover:bg-violet-500/20 hover:text-white transition-colors"
@@ -71,3 +72,4 @@ const Header: React.FC<HeaderProps> = ({ onShowHelp }) => {
 };
 
 export default Header;
+
