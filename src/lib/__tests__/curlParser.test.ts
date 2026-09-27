@@ -113,4 +113,29 @@ describe('curlParser — parseCurlCommand', () => {
     expect(cmd.url).toBe('https://api.example.com/status');
     expect(cmd.headers[0].key).toBe('Cache-Control');
   });
+
+  it('detects plain text non-JSON payload as rawType: text', () => {
+    const cmd = parseCurlCommand("curl -X POST https://api.example.com/logs -d 'Plain text log message'");
+    expect(cmd.method).toBe('POST');
+    expect(cmd.body).toBe('Plain text log message');
+    expect(cmd.bodyType).toBe('raw');
+    expect(cmd.rawType).toBe('text');
+  });
+
+  it('parses --data-urlencode into body', () => {
+    const cmd = parseCurlCommand("curl https://api.example.com/oauth/token --data-urlencode 'grant_type=client_credentials'");
+    expect(cmd.method).toBe('POST');
+    expect(cmd.body).toBe('grant_type=client_credentials');
+  });
+
+  it('ignores standard curl modifier flags (--compressed, -k, --insecure, -s, --silent, -v, --verbose)', () => {
+    const cmd = parseCurlCommand("curl -s -k --compressed --insecure -v https://api.example.com/health");
+    expect(cmd.method).toBe('GET');
+    expect(cmd.url).toBe('https://api.example.com/health');
+  });
+
+  it('parses URLs without explicit protocol scheme if they contain dots', () => {
+    const cmd = parseCurlCommand('curl api.sonyliv.com/v1/ping');
+    expect(cmd.url).toBe('api.sonyliv.com/v1/ping');
+  });
 });

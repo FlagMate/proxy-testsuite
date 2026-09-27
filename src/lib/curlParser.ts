@@ -127,13 +127,14 @@ export function parseCurlCommand(rawInput: string): ParsedCurl {
       continue;
     }
 
-    // Data / Body: -d, --data, --data-raw, --data-binary, --data-ascii
+    // Data / Body: -d, --data, --data-raw, --data-binary, --data-ascii, --data-urlencode
     if (
       t === '-d' ||
       t === '--data' ||
       t === '--data-raw' ||
       t === '--data-binary' ||
-      t === '--data-ascii'
+      t === '--data-ascii' ||
+      t === '--data-urlencode'
     ) {
       if (tokens[i + 1] !== undefined) {
         result.body = tokens[++i];

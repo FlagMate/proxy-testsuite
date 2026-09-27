@@ -207,7 +207,7 @@ export class HARParser {
     const domainList = this.normalizeDomainList(filters);
     const routeList = this.normalizeRouteList(filters);
 
-    return entries.filter(entry => {
+    const filtered = entries.filter(entry => {
       if (!entry?.request?.url) return false;
 
       let url: URL;

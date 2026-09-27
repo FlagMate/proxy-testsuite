@@ -162,4 +162,55 @@ describe('HARParser class', () => {
     expect(summary.filteredEntries).toBe(2);
     expect(summary.skippedEntries).toBe(2);
   });
+
+  it('counts endpoint frequencies across entries', () => {
+    const counts = HARParser.getEndpointCounts(sampleEntries);
+    expect(counts.get('GET https://api.example.com/v1/users?page=1')).toBe(1);
+    expect(counts.get('POST https://api.example.com/v1/users')).toBe(1);
+  });
+
+  it('excludes various static assets and media extensions', () => {
+    const staticMediaEntries: HAREntry[] = [
+      { request: { method: 'GET', url: 'https://cdn.example.com/img.png', headers: [], queryString: [] }, response: { status: 200, statusText: 'OK', headers: [], content: { mimeType: 'image/png' } }, time: 10 },
+      { request: { method: 'GET', url: 'https://cdn.example.com/font.woff2', headers: [], queryString: [] }, response: { status: 200, statusText: 'OK', headers: [], content: { mimeType: 'font/woff2' } }, time: 10 },
+      { request: { method: 'GET', url: 'https://cdn.example.com/video.mp4', headers: [], queryString: [] }, response: { status: 200, statusText: 'OK', headers: [], content: { mimeType: 'video/mp4' } }, time: 10 },
+      { request: { method: 'GET', url: 'https://cdn.example.com/style.css', headers: [], queryString: [] }, response: { status: 200, statusText: 'OK', headers: [], content: { mimeType: 'text/css' } }, time: 10 },
+      { request: { method: 'GET', url: 'https://cdn.example.com/stream.m3u8', headers: [], queryString: [] }, response: { status: 200, statusText: 'OK', headers: [], content: { mimeType: 'application/x-mpegURL' } }, time: 10 },
+    ];
+
+    const filtered = HARParser.filterEntries(staticMediaEntries, {});
+    expect(filtered).toHaveLength(0);
+  });
+
+  it('supports deduplication of identical polled requests', () => {
+    const repeatedEntries: HAREntry[] = [
+      { request: { method: 'GET', url: 'https://api.example.com/poll', headers: [], queryString: [] }, response: { status: 200, statusText: 'OK', headers: [], content: { mimeType: 'application/json' } }, time: 10 },
+      { request: { method: 'GET', url: 'https://api.example.com/poll', headers: [], queryString: [] }, response: { status: 200, statusText: 'OK', headers: [], content: { mimeType: 'application/json' } }, time: 15 },
+      { request: { method: 'GET', url: 'https://api.example.com/poll', headers: [], queryString: [] }, response: { status: 200, statusText: 'OK', headers: [], content: { mimeType: 'application/json' } }, time: 20 },
+    ];
+
+    const deduped = HARParser.filterEntries(repeatedEntries, { domain: 'api.example.com', deduplicate: true });
+    expect(deduped).toHaveLength(1);
+
+    const nonDeduped = HARParser.filterEntries(repeatedEntries, { domain: 'api.example.com', deduplicate: false });
+    expect(nonDeduped).toHaveLength(3);
+  });
+
+  it('handles multiple domain and route tags gracefully', () => {
+    const multiFilter = HARParser.filterEntries(sampleEntries, {
+      domains: ['api.example.com', 'otherdomain.org'],
+      routes: ['/v1/', '/status'],
+    });
+    expect(multiFilter.length).toBeGreaterThan(0);
+  });
+
+  it('gracefully skips entries with invalid or missing URLs', () => {
+    const invalidEntries: any[] = [
+      { request: { method: 'GET', url: 'not-a-valid-url' } },
+      { request: null },
+      null,
+    ];
+    const filtered = HARParser.filterEntries(invalidEntries, {});
+    expect(filtered).toHaveLength(0);
+  });
 });
