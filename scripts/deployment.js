@@ -36,7 +36,7 @@ console.log(`[deployment] commit: ${message}`);
 const c = git(['commit', '-m', message]);
 if (c.status !== 0) { console.error(c.stderr || c.stdout); process.exit(1); }
 
-console.log(`[deployment] push origin ${BRANCH}`);
-const p = git(['push', '-u', 'origin', BRANCH], { stdio: 'inherit' });
+console.log(`[deployment] push origin ${BRANCH} (force)`);
+const p = git(['push', '-u', 'origin', BRANCH, '--force'], { stdio: 'inherit' });
 if (p.status !== 0) { console.error('[deployment] push failed (commit saved locally).'); process.exit(1); }
 console.log('[deployment] done.');
