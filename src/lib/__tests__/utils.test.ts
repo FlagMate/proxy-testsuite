@@ -27,4 +27,12 @@ describe('utils', () => {
       expect(isValidUrl('')).toBe(false);
     });
   });
+
+  describe('cn', () => {
+    it('merges class names correctly with tailwind classes', async () => {
+      const { cn } = await import('../utils');
+      expect(cn('p-4', 'bg-red-500')).toBe('p-4 bg-red-500');
+      expect(cn('p-2', 'p-4')).toBe('p-4');
+    });
+  });
 });

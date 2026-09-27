@@ -121,7 +121,7 @@ export const parseEpochTimestamp = (val: any, keyHint: string = ""): TimestampIn
 };
 
 export const isColorHex = (val: string): boolean => {
-  return typeof val === "string" && /^#(?:[0-9a-fA-F]{3}){1,2}(?:[0-9a-fA-F]{2})?$/.test(val.trim());
+  return typeof val === "string" && /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(val.trim());
 };
 
 export const formatJsonPath = (path: string): string => {
