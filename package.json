@@ -14,10 +14,10 @@
     "privacy",
     "local-first"
   ],
-  "homepage": "https://github.com/nvnjwl/curl-commander",
+  "homepage": "https://github.com/nvnjwl/proxy-testsuite",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nvnjwl/curl-commander.git"
+    "url": "https://github.com/nvnjwl/proxy-testsuite.git"
   },
   "author": "nvnjwl",
   "license": "MIT",
@@ -28,7 +28,6 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "deploy": "node ../scripts/deploy-test.mjs",
-    "deploy:vercel": "vercel --prod",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
@@ -116,4 +115,3 @@
     "vitest": "^2.1.9"
   }
 }
-

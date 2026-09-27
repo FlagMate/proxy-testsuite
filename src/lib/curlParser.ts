@@ -1,5 +1,5 @@
 /**
- * Robust cURL command parser for curl-commander / REST tester.
+ * Robust cURL command parser for proxy-testsuite / REST tester.
  * Handles:
  * - Single-line and multi-line backslash (\) formatting
  * - Standard bash, cmd, and PowerShell cURL exports
@@ -168,7 +168,7 @@ export function parseCurlCommand(rawInput: string): ParsedCurl {
             value: `Basic ${encoded}`,
             enabled: true,
           });
-        } catch {}
+        } catch { }
       }
       continue;
     }
