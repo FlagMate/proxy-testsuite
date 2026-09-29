@@ -1,8 +1,8 @@
 {
   "name": "proxyceptor-commander",
   "private": false,
-  "version": "2.5.0",
-  "description": "ProxyCeptor REST Commander v2.5.0 — Lightweight, local-first API testing & debugging suite seamlessly integrated with ProxyCeptor Cloud & SuperDebug SDK.",
+  "version": "2.6.0",
+  "description": "ProxyCeptor REST Commander v2.6.0 — Lightweight, local-first API testing & debugging suite seamlessly integrated with ProxyCeptor Cloud & SuperDebug SDK.",
   "type": "module",
   "keywords": [
     "api",

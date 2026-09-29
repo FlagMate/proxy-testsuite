@@ -615,7 +615,7 @@ const ApiTester = () => {
         ...prev
       ].slice(0, 50)); // keep last 50
 
-      const ruleNote = appliedRules.length > 0 ? ` â€¢ ${appliedRules.length} rule(s) applied` : '';
+      const ruleNote = appliedRules.length > 0 ? ` • ${appliedRules.length} rule(s) applied` : '';
       toast({
         title: serverOverride
           ? `Request Sent (via Server MITM Override${ruleNote})`
@@ -933,7 +933,7 @@ const ApiTester = () => {
               ? 'bg-blue-600 shadow-sm'
               : 'bg-slate-200/80 hover:bg-blue-400 dark:bg-slate-800 dark:hover:bg-blue-600'
             }`}
-          title="Drag to resize partition â€¢ Double-click to reset"
+          title="Drag to resize partition • Double-click to reset"
         >
           <div className="absolute inset-y-0 -left-1 -right-1 cursor-col-resize" />
           <div className={`h-8 w-0.5 rounded-full transition-colors ${isResizingSidebar ? 'bg-white' : 'bg-slate-400 group-hover:bg-white'}`} />
@@ -1274,7 +1274,7 @@ const ApiTester = () => {
               onMouseDown={handleMouseDown}
               onDoubleClick={handleDoubleClick}
               style={{ userSelect: 'none' }}
-              title="Drag to resize â€¢ Double-click to collapse/expand"
+              title="Drag to resize • Double-click to collapse/expand"
             >
               {/* Visual grip indicator */}
               <div className="flex gap-1">
@@ -1508,13 +1508,13 @@ const ApiTester = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <HelpCircle className="w-5 h-5 text-violet-600" />
-              ProxyCeptor Commander â€” Help &amp; Keyboard Shortcuts
+              ProxyCeptor Commander — Help &amp; Keyboard Shortcuts
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-6">
             {/* Keyboard Shortcuts Section */}
             <div>
-              <h3 className="text-lg font-semibold text-slate-800 mb-3">âŒ¨ï¸ Keyboard Shortcuts</h3>
+              <h3 className="text-lg font-semibold text-slate-800 mb-3">⌨️ Keyboard Shortcuts</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-50 to-blue-50 rounded-md">
                   <span className="text-sm text-slate-700">Send Request</span>
@@ -1537,7 +1537,7 @@ const ApiTester = () => {
 
             {/* Getting Started Section */}
             <div>
-              <h3 className="text-lg font-semibold text-slate-800 mb-3">ðŸš€ Getting Started</h3>
+              <h3 className="text-lg font-semibold text-slate-800 mb-3">🚀 Getting Started</h3>
               <div className="space-y-3">
                 <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-md border border-blue-100">
                   <h4 className="font-medium text-slate-800 mb-2">1. Create Your First Request</h4>
@@ -1556,22 +1556,22 @@ const ApiTester = () => {
 
             {/* Features Section */}
             <div>
-              <h3 className="text-lg font-semibold text-slate-800 mb-3">âœ¨ Key Features</h3>
+              <h3 className="text-lg font-semibold text-slate-800 mb-3">✨ Key Features</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-3 bg-gradient-to-r from-slate-50 to-blue-50 rounded-md">
-                  <h4 className="font-medium text-slate-800 mb-1">ðŸ”’ 100% Local & Private</h4>
+                  <h4 className="font-medium text-slate-800 mb-1">🔒 100% Local & Private</h4>
                   <p className="text-xs text-slate-600">All data stays on your device. No cloud dependencies.</p>
                 </div>
                 <div className="p-3 bg-gradient-to-r from-slate-50 to-blue-50 rounded-md">
-                  <h4 className="font-medium text-slate-800 mb-1">âš¡ Lightning Fast</h4>
+                  <h4 className="font-medium text-slate-800 mb-1">⚡ Lightning Fast</h4>
                   <p className="text-xs text-slate-600">16x faster than traditional API testing tools.</p>
                 </div>
                 <div className="p-3 bg-gradient-to-r from-slate-50 to-blue-50 rounded-md">
-                  <h4 className="font-medium text-slate-800 mb-1">ðŸ“‹ cURL Import</h4>
+                  <h4 className="font-medium text-slate-800 mb-1">📋 cURL Import</h4>
                   <p className="text-xs text-slate-600">Paste cURL commands to quickly import requests.</p>
                 </div>
                 <div className="p-3 bg-gradient-to-r from-slate-50 to-blue-50 rounded-md">
-                  <h4 className="font-medium text-slate-800 mb-1">ðŸŒ Environment Variables</h4>
+                  <h4 className="font-medium text-slate-800 mb-1">🌍 Environment Variables</h4>
                   <p className="text-xs text-slate-600">Use variables for different environments (dev, staging, prod).</p>
                 </div>
               </div>
@@ -1579,22 +1579,22 @@ const ApiTester = () => {
 
             {/* Tips Section */}
             <div>
-              <h3 className="text-lg font-semibold text-slate-800 mb-3">ðŸ’¡ Pro Tips</h3>
+              <h3 className="text-lg font-semibold text-slate-800 mb-3">💡 Pro Tips</h3>
               <div className="space-y-2">
                 <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-md">
-                  <span className="text-amber-600 mt-0.5">ðŸ’¡</span>
+                  <span className="text-amber-600 mt-0.5">💡</span>
                   <div>
                     <p className="text-sm text-slate-700"><strong>Environment Variables:</strong> Use {`{{variable_name}}`} in URLs and headers for dynamic values.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-emerald-50 to-green-50 rounded-md">
-                  <span className="text-emerald-600 mt-0.5">âš¡</span>
+                  <span className="text-emerald-600 mt-0.5">⚡</span>
                   <div>
                     <p className="text-sm text-slate-700"><strong>Quick Send:</strong> Press Ctrl+Enter from anywhere to send the current request.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-md">
-                  <span className="text-blue-600 mt-0.5">ðŸ“</span>
+                  <span className="text-blue-600 mt-0.5">📁</span>
                   <div>
                     <p className="text-sm text-slate-700"><strong>Organization:</strong> Use collections to group related APIs and keep your workspace clean.</p>
                   </div>
@@ -1609,7 +1609,7 @@ const ApiTester = () => {
                   <div className="w-6 h-6 bg-gradient-to-br from-violet-600 via-indigo-600 to-cyan-500 rounded flex items-center justify-center shadow-sm">
                     <Send className="w-3 h-3 text-white" />
                   </div>
-                  <span className="font-semibold text-slate-800">ProxyCeptor Commander v2.5.0</span>
+                  <span className="font-semibold text-slate-800">ProxyCeptor Commander v2.6.0</span>
                 </div>
                 <p className="text-xs text-slate-500">Integrated with ProxyCeptor Cloud &amp; SuperDebug</p>
               </div>
