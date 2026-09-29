@@ -6,7 +6,7 @@ Authoritative guide for AI agents and developers working inside `proxy-testsuite
 
 ## 1. Overview & Ecosystem Context
 
-**ProxyCeptor Commander** (directory: `proxy-testsuite/`, package: `proxyceptor-commander v2.5.0`) is a lightweight, local-first API testing and debugging suite integrated into the **ProxyCeptor Cloud Ecosystem**.
+**ProxyCeptor Commander** (directory: `proxy-testsuite/`, package: `proxyceptor-commander v2.6.0`) is a lightweight, local-first API testing and debugging suite integrated into the **ProxyCeptor Cloud Ecosystem**.
 
 ### Background & Evolution
 - Originally prototyped as a lightweight alternative to Postman (formerly internal codename *Restify*/*Curlify*).
