@@ -12,20 +12,37 @@ const Header: React.FC<HeaderProps> = ({ onShowHelp }) => {
   return (
     <header className="relative bg-slate-950/95 backdrop-blur border-b border-slate-800 shadow-md select-none">
       {/* ProxyCeptor Gradient Hairline Accent */}
-      <div className="h-[2px] w-full bg-gradient-to-r from-violet-500 via-indigo-500 to-cyan-400" />
+      <div className="h-[2px] w-full bg-gradient-to-r from-[#ff5e00] via-[#ff9436] to-[#ff5e00]" />
 
       <div className="flex items-center justify-between w-full px-4 py-2.5">
         {/* Logo and Brand */}
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-violet-600 via-indigo-600 to-cyan-500 rounded-lg flex items-center justify-center shadow-md shadow-violet-500/25 border border-violet-400/30">
-            <Zap className="w-4 h-4 text-white fill-current" />
+          <div className="w-8 h-8 rounded-lg bg-[#0d121d] border border-white/10 shadow-[0_2px_8px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.08)] flex items-center justify-center relative overflow-hidden flex-shrink-0 group">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,122,24,0.18)_0%,transparent_75%)] pointer-events-none" />
+            <img
+              src="/brand/proxyceptor-mark.webp"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (!target.dataset.tried) {
+                  target.dataset.tried = 'true';
+                  target.src = './brand/proxyceptor-mark.webp';
+                }
+              }}
+              alt="ProxyCeptor"
+              width="22"
+              height="18"
+              className="max-w-[80%] max-h-[80%] object-contain drop-shadow-[0_0_6px_rgba(255,122,24,0.45)] group-hover:scale-105 transition-transform"
+              draggable={false}
+            />
           </div>
           <div className="flex items-center gap-2.5">
             <div className="flex items-baseline gap-1.5">
-              <h1 className="text-base font-bold tracking-tight text-white">ProxyCeptor</h1>
+              <h1 className="text-base font-extrabold tracking-tight text-white">
+                Proxy<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff9436] to-[#ff5e00]">Ceptor</span>
+              </h1>
               <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Commander</span>
             </div>
-            <Badge className="bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[11px] font-semibold px-2 py-0.5 rounded-full shadow-sm">
+            <Badge className="bg-[#ff7a18]/15 text-[#ff9d42] border border-[#ff7a18]/30 text-[11px] font-semibold px-2 py-0.5 rounded-full shadow-sm">
               v{pkg.version}
             </Badge>
           </div>
