@@ -9,6 +9,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <script src="/favicon-anim.js" defer></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ProxyCeptor Commander v2.6.0 — Local-First API Testing Tool</title>
   <meta name="description"
@@ -76,7 +77,7 @@
   <div id="root"></div>
 
   <!-- SuperDebug SDK + ProxyCeptor Widget -->
-  <script src="https://proxyceptor.com/proxyceptorwidget.js"></script>
+  <script src="/test/proxyceptorwidget.js" onerror="this.src='https://proxyceptor.com/proxyceptorwidget.js'"></script>
 
   <script type="module" src="/src/main.tsx"></script>
 </body>

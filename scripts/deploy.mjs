@@ -37,6 +37,9 @@ function deployToDirectory(targetDir, label) {
     let html = readFileSync(htmlFile, 'utf8');
     html = html.replace(/src="\.\/([^"]+)"/g, 'src="/test/$1"');
     html = html.replace(/href="\.\/([^"]+)"/g, 'href="/test/$1"');
+    const buildTs = Date.now();
+    html = html.replace(/\brestifysdk\.js\b/g, `restifysdk.js?v=${buildTs}`);
+    html = html.replace(/\brestifystyle\.css\b/g, `restifystyle.css?v=${buildTs}`);
     writeFileSync(htmlFile, html, 'utf8');
   }
 
